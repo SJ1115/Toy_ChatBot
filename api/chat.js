@@ -3,7 +3,12 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { messages } = req.body;
+  if (!process.env.OPENAI_API_KEY) {
+    return res.status(500).json({ error: 'API key not configured' });
+  }
+
+  const body = req.body ?? {};
+  const { messages } = body;
 
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'Invalid messages' });
@@ -31,7 +36,7 @@ module.exports = async function handler(req, res) {
 
     const data = await upstream.json();
     return res.status(upstream.status).json(data);
-  } catch {
-    return res.status(500).json({ error: 'Internal server error' });
+  } catch (err) {
+    return res.status(500).json({ error: 'Internal server error', detail: err.message });
   }
 };
