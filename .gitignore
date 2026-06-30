@@ -1,1 +1,13 @@
+# 환경 변수
 .env
+.env.*
+.env.local
+
+# Vercel
+.vercel
+
+# macOS
+.DS_Store
+
+# Node
+node_modules/
